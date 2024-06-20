@@ -1,8 +1,12 @@
 const express = require("express");
+const { BlogModel } = require("../models/blogModel");
 const router = express.Router();
 
 
-router.get("/", (request, response, next) => {
+router.get("/", async (request, response, next) => {
+
+    let result = await BlogModel.find({}).exec();
+
     response.json({
         message:"Blog router homepage"
     });
