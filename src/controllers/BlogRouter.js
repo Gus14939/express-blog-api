@@ -1,38 +1,70 @@
 const express = require("express");
-const { BlogModel } = require("../models/blogModel");
+const { BlogModel } = require("../models/BlogModel");
+const { UserModel } = require("../models/UserModel"); // Need this imported somewhere in the server code to make the server connection use Users
 const router = express.Router();
-
 
 router.get("/", async (request, response, next) => {
 
-    let result = await BlogModel.find({}).exec();
+	let result = await BlogModel.find({}).populate("author").exec();
 
-    response.json({
-        message:"Blog router homepage"
-    });
+	response.json({
+		message:"Blog router homepage",
+		result: result
+	});
 });
 
-router.get("/:id", (request, response, next) => {
-    response.json({
-        message:"Blog router homepage"
-    });
+
+router.get("/findById/:id", async (request, response, next) => {
+
+	let result = await BlogModel.findById(request.params.id).populate("author").exec();
+
+	response.json({
+		message:"Blog router homepage",
+		result: result
+	});
 });
 
-router.post("/", (request, response, next) => {
-    response.json({
-        message:"Blog router homepage"
-    });
+router.post("/findOneQuery", async (request, response, next) => {
+
+	let result = await BlogModel.findOne(request.body).populate("author").exec();
+
+	response.json({
+		message:"Blog router homepage",
+		result: result
+	});
+});
+
+router.post("/findManyQuery", async (request, response, next) => {
+
+	let result = await BlogModel.find(request.body).populate("author").exec();
+
+	response.json({
+		message:"Blog router homepage",
+		result: result
+	});
+});
+
+
+router.post("/", async (request, response, next) => {
+
+	let result = await BlogModel.create(request.body);
+
+	response.json({
+		message:"Blog router homepage",
+		result: result
+	});
 });
 
 router.put("/", (request, response, next) => {
-    response.json({
-        message:"Blog router homepage"
-    });
+	response.json({
+		message:"Blog router homepage"
+	});
 });
 
 router.delete("/", (request, response, next) => {
-    response.json({
-        message:"Blog router homepage"
-    });
+	response.json({
+		message:"Blog router homepage"
+	});
 });
+
 module.exports = router;
