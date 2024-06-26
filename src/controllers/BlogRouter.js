@@ -47,7 +47,7 @@ router.post("/findManyQuery", async (request, response, next) => {
 
 router.post("/", async (request, response, next) => {
 
-	let result = await BlogModel.create(request.body);
+	let result = await BlogModel.create(request.body).catch(error => {return error});
 
 	response.json({
 		message:"Blog router homepage",
@@ -61,9 +61,13 @@ router.put("/", (request, response, next) => {
 	});
 });
 
-router.delete("/", (request, response, next) => {
+router.delete("/", async (request, response, next) => {
+
+	let result = await BlogModel.findByIdAndDelete(request.body.id);
+
 	response.json({
-		message:"Blog router homepage"
+		message:"Blog router homepage",
+		result: result
 	});
 });
 
