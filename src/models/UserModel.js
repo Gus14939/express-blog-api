@@ -5,6 +5,7 @@
 
 const mongoose = require("mongoose");
 const { commentSchema } = require("./CommentSchema");
+const bcrypt = require("bcryptjs")
 
 const userSchema = mongoose.Schema({
 	username: {
@@ -38,14 +39,18 @@ userSchema.pre(
 		const user = this;
 		console.log("pre-save middleware running")
 		if(!user.isModified('password')){
-			return
+			return next();
 		}
 		console.log("pre-save middleware and password is modified!")
 		// if we reach this line of code, the password is modified
 		// and thus is not encrypted!
 		//  we must encrypt it!
 
-		// TODO: encryption
+		const hash = await bcrypt.hash(this.password, 10)
+
+		console.log("Hashed and encrypted and salted password is:" + hash)
+
+		this.password = hash;
 
 		next();
 	}
